@@ -52,6 +52,7 @@ let FleetX: number[] = []
 let HorizontalMove = 0
 let VerticalMove = 0
 radio.setGroup(1)
+let Player1 = randint(0, 4)
 VerticalMove = 1
 HorizontalMove = 1
 let Ship1X = randint(0, 4)
@@ -70,11 +71,13 @@ Cursor = game.createSprite(0, 0)
 Cursor.set(LedSpriteProperty.Blink, 600)
 basic.forever(function () {
     while (input.buttonIsPressed(Button.AB)) {
-        led.plot(Ship1X, Ship1Y)
-        led.plot(Ship2X, Ship2Y)
-        led.plot(Ship3X, Ship3Y)
-        led.plot(Ship4X, Ship4Y)
-        led.plot(Ship5X, Ship5Y)
+        game.pause()
+        led.plotBrightness(Ship1X, Ship1Y, 10)
+        led.plotBrightness(Ship2X, Ship2Y, 10)
+        led.plotBrightness(Ship3X, Ship3Y, 10)
+        led.plotBrightness(Ship4X, Ship4Y, 10)
+        led.plotBrightness(Ship5X, Ship5Y, 10)
+        game.resume()
     }
 })
 basic.forever(function () {
