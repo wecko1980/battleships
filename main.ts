@@ -1,3 +1,6 @@
+enum RadioMessage {
+    message1 = 49434
+}
 input.onButtonPressed(Button.A, function () {
     Cursor.change(LedSpriteProperty.Y, VerticalMove)
     if (Cursor.get(LedSpriteProperty.Y) == 0) {
@@ -59,6 +62,11 @@ input.onButtonPressed(Button.AB, function () {
     basic.pause(3000)
     game.resume()
 })
+radio.onReceivedString(function (receivedString) {
+    if (receivedString == "GameOver") {
+        game.gameOver()
+    }
+})
 input.onButtonPressed(Button.B, function () {
     Cursor.change(LedSpriteProperty.X, HorizontalMove)
     if (Cursor.get(LedSpriteProperty.X) == 0) {
@@ -71,14 +79,20 @@ input.onButtonPressed(Button.B, function () {
 radio.onReceivedValue(function (name, value) {
     if (name == "1ROW" && value == FleetX[0]) {
         music.startMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.OnceInBackground)
+        radio.sendValue("1HIT", FleetX[0])
+        FleetX[0] = ListItemEmpty
         ShipsRemaining += -1
         ShipSink()
     }
     if (name == "1ROW" && value != FleetX[0]) {
         music.startMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.OnceInBackground)
     }
+    if (name == "1HIT" && value == FleetX[0]) {
+        led.plotBrightness(FleetX[0], 0, 80)
+    }
     if (name == "2ROW" && value == FleetX[1]) {
         music.startMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.OnceInBackground)
+        FleetX[1] = ListItemEmpty
         ShipsRemaining += -1
         ShipSink()
     }
@@ -87,21 +101,33 @@ radio.onReceivedValue(function (name, value) {
     }
     if (name == "3ROW" && value == FleetX[2]) {
         music.startMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.OnceInBackground)
+        FleetX[2] = ListItemEmpty
+        ShipsRemaining += -1
+        ShipSink()
     }
     if (name == "3ROW" && value != FleetX[2]) {
         music.startMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.OnceInBackground)
     }
     if (name == "4ROW" && value == FleetX[3]) {
         music.startMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.OnceInBackground)
+        FleetX[3] = ListItemEmpty
+        ShipsRemaining += -1
+        ShipSink()
     }
     if (name == "4ROW" && value != FleetX[3]) {
         music.startMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.OnceInBackground)
     }
     if (name == "5ROW" && value == FleetX[4]) {
         music.startMelody(music.builtInMelody(Melodies.PowerUp), MelodyOptions.OnceInBackground)
+        FleetX[4] = ListItemEmpty
+        ShipsRemaining += -1
+        ShipSink()
     }
     if (name == "5ROW" && value != FleetX[4]) {
         music.startMelody(music.builtInMelody(Melodies.PowerDown), MelodyOptions.OnceInBackground)
+    }
+    if (ShipsRemaining == 0) {
+        radio.sendString("GameOver")
     }
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
@@ -133,12 +159,15 @@ let Ship4X = 0
 let Ship3X = 0
 let Ship2X = 0
 let Ship1X = 0
+let ListItemEmpty = 0
+let ShipsRemaining = 0
 let HorizontalMove = 0
 let VerticalMove = 0
 radio.setGroup(1)
 VerticalMove = 1
 HorizontalMove = 1
-let ShipsRemaining = 5
+ShipsRemaining = 5
+ListItemEmpty = -1
 Ship1X = randint(0, 4)
 Ship2X = randint(0, 4)
 Ship3X = randint(0, 4)
@@ -153,3 +182,6 @@ FleetX = [Ship1X, Ship2X, Ship3X, Ship4X, Ship5X]
 let FleetY = [Ship1Y, Ship2Y, Ship3Y, Ship4Y, Ship5Y]
 Cursor = game.createSprite(0, 0)
 Cursor.set(LedSpriteProperty.Blink, 600)
+basic.forever(function () {
+	
+})
